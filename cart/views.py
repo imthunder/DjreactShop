@@ -4,18 +4,22 @@ from shop.models import Product
 from .cart import Cart
 from .forms import CartAddProductForm
 from coupons.forms import CouponApplyForm
+from django.http import JsonResponse
 
 @require_POST
-def cart_add(request, product_id):
+def cart_add(request):
     cart = Cart(request)
+    # , product_id, count
+    product_id = request.POST.get('product_id')
+    count = int(request.POST.get('count'))
     product = get_object_or_404(Product, id=product_id)
-    form = CartAddProductForm(request.POST)
-    if form.is_valid():
-        cd = form.cleaned_data
-        cart.add(product=product,
-                 quantity=cd['quantity'],
-                 update_quantity=cd['update'])
-    return redirect('cart:cart_detail')
+    cart.add(product=product,
+             quantity=count,
+             update_quantity=True)
+    return  JsonResponse({'success':True, 'data':{
+                'status_code' : 200,
+                'cart':cart.cart
+            }})
 
 def cart_remove(request, product_id):
     cart = Cart(request)
@@ -35,4 +39,3 @@ def cart_detail(request):
                   'cart/detail.html',
                   {'cart': cart,
                    'coupon_apply_form': coupon_apply_form})
-                   

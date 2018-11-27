@@ -5,30 +5,49 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Checkout</h1>
+  <script type="text/javascript"> 
 
-  <div class="order-info">
-    <h3>Your order</h3>
-    <ul>
-      {% for item in cart %}
-        <li>
-          {{ item.quantity }}x {{ item.product.name }}
-          <span>${{ item.total_price|floatformat:"2" }}</span>
-        </li>
-      {% endfor %}
-      {% if cart.coupon %}
-        <li>
-          "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)
-          <span>- ${{ cart.get_discount|floatformat:"2" }}</span>
-        </li>
-      {% endif %}
-    </ul>
-    <p>Total: ${{ cart.get_total_price_after_discount|floatformat:"2" }}</p>
-  </div>
+    function checkForm(form) { 
+        for (var i = 0; i < form.elements.length; i++) { 
+            if (form.elements[i].type == "text" && form.elements[i].value == "") { 
+                alert("送餐信息不完整")
+                return false; 
+            } 
+        } 
+        return true; 
+    } 
+    
 
-  <form action="." method="post" class="order-form">
+  </script> 
+  <form class="callout text-center" method="post" onsubmit="return checkForm(this)">
+      <h2>请完善您的订单信息</h2>
+      <div class="floated-label-wrapper">
+        <label >联系电话</label>
+        <input type="text" id="full-name" name="phone" placeholder="送餐时联系您的电话">
+      </div>
+      <div class="floated-label-wrapper">
+        <label>付款微信</label>
+        <input type="text" id="email" name="wechat" placeholder="店主将添加您的微信完成订单的支付">
+      </div>
+      <div class="floated-label-wrapper">
+        <label >送餐地址</label>
+        <input type="text" id="pass" name="address" placeholder="您取餐时的地点">
+      </div>
+      <div class="floated-label-wrapper">
+          <label >送餐时间</label>
+          <input type="text" id="pass" name="time" placeholder="您期望的取餐时间">
+      </div>
+      <input class="button expanded" type="submit" value="提交">
+      {% csrf_token %}
+    </form>
+    
+    
+
+  
+
+  <!-- <form action="." method="post" class="order-form">
     {{ form.as_p }}
     <p><input type="submit" value="Place order"></p>
     {% csrf_token %}
-  </form>
+  </form> -->
 {% endblock %}

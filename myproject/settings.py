@@ -25,7 +25,7 @@ SECRET_KEY = '9#)fn=ux9+m+4-shn1sa&#=6&w22yyhf0c#*%^^4#6c5sj=aun'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['47.107.158.251', 'imthunder.xin']
+ALLOWED_HOSTS = ['*', '47.107.158.251', 'imthunder.xin']
 
 
 # Application definition
