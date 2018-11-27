@@ -2,11 +2,78 @@
 {% load static %}
 
 {% block title %}
-  Your shopping cart
+  购物车
 {% endblock %}
 
 {% block content %}
-  <h1>Your shopping cart</h1>
+    <script>
+       function posteCount(event) {
+          productID = event.id
+          $.ajax({
+              type: 'POST',
+              url: '/cart/add/',
+              data: {
+                'product_id': productID,
+                'count': 0
+              },
+              dataType: 'json',
+              success: function (data) {
+                  let cart = data['data']['cart']
+                  console.log('cart',cart)
+                if (cart) {
+
+                    let cartJson = JSON.stringify(cart);
+                    setCookieMinute("cart", cartJson, 24);
+                    var a = document.getElementById('cartCountA');
+                    var total = 0
+                    var money = 0
+                    for(let product in cart) {
+                      total += cart[product]['quantity']
+                      money += cart[product]['quantity'] * cart[product]['price']
+                    }
+                    if (total == 0) {
+                      a.innerHTML = "<a id='cartCountA'>您的购物车是空的</a>"
+                    } else {
+                      a.innerHTML =  `<a id='cartCountA' href='/cart/'>${total}件商品,¥${money}</a>`
+                    }
+                    location.reload() 
+                }
+              }
+            });
+        }
+    </script>
+    <div class="checkout-summary">
+      {% for item in cart %}
+        {% with product=item.product %}
+          {% if item.quantity > 0 %}
+          <div class="checkout-summary-item">
+            <img style="width:144px; height:100px;" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+            <div class="item-name">
+              <p><span class="title">{{ product.name }}</span><p>
+              <p><span class="title">¥{{ item.price }} </span></p>
+              <p><span class="title">× {{ item.quantity }} </span></p>
+
+            </div>
+            <div class="item-price">
+                <br>
+                <p class="title">¥{{ item.total_price }}</p>
+                <button style="color:grey" onclick="posteCount(this)" id= {{ product.id }}>删除</button>
+            </div>
+          </div>
+          {% endif %}
+        {% endwith %}
+      {% endfor %}
+      <br>
+      <br>
+      {% if cart|length > 0 %}
+        <button class="button expanded" onclick="window.location.href='/orders/create/'">生成订单</button>
+      {% endif %}
+    </div>
+
+
+
+
+  <!-- <h1>Your shopping cart</h1>
   <table class="cart">
     <thead>
       <tr>
@@ -72,5 +139,5 @@
     <a href="{% url "shop:product_list" %}" class="button
     light">Continue shopping</a>
     <a href="{% url "orders:order_create" %}" class="button">Checkout</a>
-  </p>
+  </p> -->
 {% endblock %}

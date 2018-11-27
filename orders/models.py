@@ -5,9 +5,10 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from coupons.models import Coupon
 
 class Order(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField()
+    phone = models.CharField(max_length=50)
+    wechat = models.CharField(max_length=50)
     address = models.CharField(max_length=250)
+    time = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
