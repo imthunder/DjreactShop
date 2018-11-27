@@ -58,14 +58,16 @@
           }
           return ""
         }
-        
-        let cartJson = getCookie("cart") 
-        if (cartJson) {
+
+        let cartJson = getCookie("cart")
+        if (cartJson && cartJson != "") {
           let cartCookie = JSON.parse(cartJson)
           for (var product in cartCookie) {
             let inputID = 'inputCount' + product
             input = document.getElementById(inputID)
-            input.value = cartCookie[product]['quantity']
+            if (input) {
+              input.value = cartCookie[product]['quantity']
+            }
           }
         }
         var allInput = document.getElementsByName("myInput");
